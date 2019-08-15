@@ -24,16 +24,19 @@ namespace GraficadorSeñales
         {
             InitializeComponent();
 
-            plnGrafica.Points.Add(new Point(0, 10));
+            /*plnGrafica.Points.Add(new Point(0, 10));
             plnGrafica.Points.Add(new Point(20, 15));
             plnGrafica.Points.Add(new Point(100, 50));
             plnGrafica.Points.Add(new Point(200, 1));
             plnGrafica.Points.Add(new Point(300, 70));
-            plnGrafica.Points.Add(new Point(1000, 70));
+            plnGrafica.Points.Add(new Point(1000, 70));*/
+
+
         }
 
         private void BtnGraficar_Click(object sender, RoutedEventArgs e)
         {
+            //Convertidor de texto a int
             double amplitud = double.Parse(txtAmplitud.Text);
             double fase = double.Parse(txtFase.Text);
             double frecuencia = double.Parse(txtFrecuencia.Text);
@@ -47,7 +50,9 @@ namespace GraficadorSeñales
             plnGrafica.Points.Clear();
             for (double i = tiempoInicial; i <= tiempoFinal; i += periodoMuestreo)
             {
-
+                //Tiempo actual es i
+                //En la clase señal senoidal, pide el tiempo, entonces se le manda la i
+                plnGrafica.Points.Add(new Point(i, señal.evaluar(i)));
             }
         }
     }
