@@ -51,8 +51,11 @@ namespace GraficadorSeñales
             for (double i = tiempoInicial; i <= tiempoFinal; i += periodoMuestreo)
             {
                 //Tiempo actual es i
-                //En la clase señal senoidal, pide el tiempo, entonces se le manda la i
-                plnGrafica.Points.Add(new Point(i, señal.evaluar(i)));
+                //En la clase señal senoidal, pide el tiempo para la estructura 'evaluar', entonces se le manda la i
+                //La primera i se multiplica para ver qué tan ancho es
+                //La segunda i se multiplica para ver qué tan alto es
+                //La segunda i se multiplica por -1 para observar bien las curvas de la señal y multiplicar por la mitad
+                plnGrafica.Points.Add(new Point(i * scrGrafica.Width, -1 * (señal.evaluar(i) * scrGrafica.Height / 2.0)));
             }
         }
     }
