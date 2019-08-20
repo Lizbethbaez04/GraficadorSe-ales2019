@@ -55,8 +55,12 @@ namespace GraficadorSeñales
                 //La primera i se multiplica para ver qué tan ancho es
                 //La segunda i se multiplica para ver qué tan alto es
                 //La segunda i se multiplica por -1 para observar bien las curvas de la señal y multiplicar por la mitad
-                plnGrafica.Points.Add(new Point(i * scrGrafica.Width, -1 * (señal.evaluar(i) * scrGrafica.Height / 2.0)));
-            }
+                plnGrafica.Points.Add(adaptarCoordenadas(i, señal.evaluar(i)));
+            }            
         }
+            public Point adaptarCoordenadas(double x, double y)
+            {
+                return new Point(x * scrGrafica.Width, 1 * (y * ((scrGrafica.Height / 2.0) - 25)) + (scrGrafica.Height / 2.0));
+            }
     }
 }
