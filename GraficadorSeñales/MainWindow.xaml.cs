@@ -46,15 +46,20 @@ namespace GraficadorSeñales
             double periodoMuestreo = 1.0 / frecuenciaMuestreo;
 
             plnGrafica.Points.Clear();
-            for (double i = tiempoInicial; i <= tiempoFinal; i += periodoMuestreo)
+
+            for(double i = tiempoInicial; i <= tiempoFinal; i += periodoMuestreo)
             {
-                /*Tiempo actual es i
-                En la clase señal senoidal, pide el tiempo para la estructura 'evaluar', entonces se le manda la i
-                La primera i se multiplica para ver qué tan ancho es
-                La segunda i se multiplica para ver qué tan alto es
-                La segunda i se multiplica por -1 para observar bien las curvas de la señal y multiplicar por la mitad*/
-                plnGrafica.Points.Add(adaptarCoordenadas(i, señal.evaluar(i), tiempoInicial));
+                Muestra muestra = new Muestra(i, señal.evaluar(i));
+                señal.Muestras.Add(muestra);
+
             }
+
+            //Ayuda a recorrer todas las estructuras de dsatos que hay
+            foreach(Muestra muestra in señal.Muestras)
+            {
+                plnGrafica.Points.Add(adaptarCoordenadas(muestra.X, muestra.Y, tiempoInicial));
+            }
+
             //Entre más muestras haya, más calidad en la gráfica hay
             plnEjeX.Points.Clear();
             plnEjeX.Points.Add(adaptarCoordenadas(tiempoInicial, 0.0, tiempoInicial)); //Esto es para hacer la linea del eje de las X 
