@@ -45,11 +45,20 @@ namespace GraficadorSeñales
             SeñalSenoidal señal = new SeñalSenoidal(amplitud, fase, frecuencia);
             double periodoMuestreo = 1.0 / frecuenciaMuestreo;
 
+            double amplitudMaxima = 0.0;
+
             plnGrafica.Points.Clear();
 
             for(double i = tiempoInicial; i <= tiempoFinal; i += periodoMuestreo)
             {
-                Muestra muestra = new Muestra(i, señal.evaluar(i));
+                double valorMuestra = señal.evaluar(i);
+                //Comparamos los valores para verificar si el valor muestra es mayor que amplitud maxima
+                //Se le saca el absoluto para sacar la magnitud sin signo
+                if(Math.Abs(valorMuestra) > amplitudMaxima)
+                {
+                    amplitudMaxima = Math.Abs(valorMuestra);
+                }
+                Muestra muestra = new Muestra(i, valorMuestra);
                 señal.Muestras.Add(muestra);
 
             }
@@ -57,17 +66,25 @@ namespace GraficadorSeñales
             //Ayuda a recorrer todas las estructuras de dsatos que hay
             foreach(Muestra muestra in señal.Muestras)
             {
-                plnGrafica.Points.Add(adaptarCoordenadas(muestra.X, muestra.Y, tiempoInicial));
+                plnGrafica.Points.Add(adaptarCoordenadas(muestra.X, muestra.Y, tiempoInicial, amplitudMaxima));
             }
 
+            
+            lblLimiteSuperior.Text = amplitudMaxima.ToString();
+            lblLimiteInferior.Text = "-" + amplitudMaxima.ToString();
             //Entre más muestras haya, más calidad en la gráfica hay
             plnEjeX.Points.Clear();
-            plnEjeX.Points.Add(adaptarCoordenadas(tiempoInicial, 0.0, tiempoInicial)); //Esto es para hacer la linea del eje de las X 
-            plnEjeX.Points.Add(adaptarCoordenadas(tiempoFinal, 0.0, tiempoInicial)); //Esto es para hacer la linea del eje de las X
+            plnEjeX.Points.Add(adaptarCoordenadas(tiempoInicial, 0.0, tiempoInicial, amplitudMaxima)); //Esto es para hacer la linea del eje de las X 
+            plnEjeX.Points.Add(adaptarCoordenadas(tiempoFinal, 0.0, tiempoInicial, amplitudMaxima)); //Esto es para hacer la linea del eje de las X
+
+            //Eje Y
+            plnEjeY.Points.Clear();
+            plnEjeY.Points.Add(adaptarCoordenadas(0.0, amplitudMaxima, tiempoInicial, amplitudMaxima));
+            plnEjeY.Points.Add(adaptarCoordenadas(0.0, - amplitudMaxima,tiempoInicial,amplitudMaxima));
         }
-            public Point adaptarCoordenadas(double x, double y, double tiempoInicial)
+            public Point adaptarCoordenadas(double x, double y, double tiempoInicial, double amplitudMaxima)
             {
-                return new Point((x - tiempoInicial) * scrGrafica.Width, 1 * (y * ((scrGrafica.Height / 2.0) - 25)) + (scrGrafica.Height / 2.0));
+                return new Point((x - tiempoInicial) * scrGrafica.Width, (-1 * (y * (( (scrGrafica.Height / 2.0)  - 25) / amplitudMaxima) )) + (scrGrafica.Height / 2.0));
             }
     }
 }
