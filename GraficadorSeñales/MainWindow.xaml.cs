@@ -44,7 +44,8 @@ namespace GraficadorSeñales
 
             //SeñalSenoidal señal = new SeñalSenoidal(amplitud, fase, frecuencia);
             double periodoMuestreo = 1.0 / frecuenciaMuestreo;
-            SeñalParabolica señal = new SeñalParabolica();
+            //SeñalParabolica señal = new SeñalParabolica();
+            FuncionSigno señal = new FuncionSigno();
 
             double amplitudMaxima = 0.0;
 
@@ -64,7 +65,7 @@ namespace GraficadorSeñales
 
             }
 
-            //Ayuda a recorrer todas las estructuras de dsatos que hay
+            //Ayuda a recorrer todas las estructuras de datos que hay
             foreach(Muestra muestra in señal.Muestras)
             {
                 plnGrafica.Points.Add(adaptarCoordenadas(muestra.X, muestra.Y, tiempoInicial, amplitudMaxima));
