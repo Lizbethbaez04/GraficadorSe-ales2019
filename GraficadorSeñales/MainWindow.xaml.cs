@@ -35,9 +35,6 @@ namespace GraficadorSeñales
         private void BtnGraficar_Click(object sender, RoutedEventArgs e)
         {
             //Convertidor de texto a int
-            double amplitud = double.Parse(txtAmplitud.Text);
-            double fase = double.Parse(txtFase.Text);
-            double frecuencia = double.Parse(txtFrecuencia.Text);
             double tiempoInicial = double.Parse(txtTiempoInicial.Text);
             double tiempoFinal = double.Parse(txtTiempoFinal.Text);
             double frecuenciaMuestreo = double.Parse(txtFrecuenciaMuestreo.Text);
@@ -51,12 +48,12 @@ namespace GraficadorSeñales
 
             plnGrafica.Points.Clear();
 
-            for(double i = tiempoInicial; i <= tiempoFinal; i += periodoMuestreo)
+            for (double i = tiempoInicial; i <= tiempoFinal; i += periodoMuestreo)
             {
                 double valorMuestra = señal.evaluar(i);
                 //Comparamos los valores para verificar si el valor muestra es mayor que amplitud maxima
                 //Se le saca el absoluto para sacar la magnitud sin signo
-                if(Math.Abs(valorMuestra) > amplitudMaxima)
+                if (Math.Abs(valorMuestra) > amplitudMaxima)
                 {
                     amplitudMaxima = Math.Abs(valorMuestra);
                 }
@@ -66,12 +63,12 @@ namespace GraficadorSeñales
             }
 
             //Ayuda a recorrer todas las estructuras de datos que hay
-            foreach(Muestra muestra in señal.Muestras)
+            foreach (Muestra muestra in señal.Muestras)
             {
                 plnGrafica.Points.Add(adaptarCoordenadas(muestra.X, muestra.Y, tiempoInicial, amplitudMaxima));
             }
 
-            
+
             lblLimiteSuperior.Text = amplitudMaxima.ToString();
             lblLimiteInferior.Text = "-" + amplitudMaxima.ToString();
             //Entre más muestras haya, más calidad en la gráfica hay
@@ -82,11 +79,28 @@ namespace GraficadorSeñales
             //Eje Y
             plnEjeY.Points.Clear();
             plnEjeY.Points.Add(adaptarCoordenadas(0.0, amplitudMaxima, tiempoInicial, amplitudMaxima));
-            plnEjeY.Points.Add(adaptarCoordenadas(0.0, - amplitudMaxima,tiempoInicial,amplitudMaxima));
+            plnEjeY.Points.Add(adaptarCoordenadas(0.0, -amplitudMaxima, tiempoInicial, amplitudMaxima));
         }
-            public Point adaptarCoordenadas(double x, double y, double tiempoInicial, double amplitudMaxima)
+        public Point adaptarCoordenadas(double x, double y, double tiempoInicial, double amplitudMaxima)
+        {
+            return new Point((x - tiempoInicial) * scrGrafica.Width, (-1 * (y * (((scrGrafica.Height / 2.0) - 25) / amplitudMaxima))) + (scrGrafica.Height / 2.0));
+        }
+
+        private void CbTipoSeñal_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            panelConfiguracion.Children.Clear();
+            //selectedIndex te dice cuál esta seleccionado
+            switch(cbTipoSeñal.SelectedIndex)
             {
-                return new Point((x - tiempoInicial) * scrGrafica.Width, (-1 * (y * (( (scrGrafica.Height / 2.0)  - 25) / amplitudMaxima) )) + (scrGrafica.Height / 2.0));
+                case 0: //Parabolica
+                    panelConfiguracion.Children.Add(new ConfiguracionSeñalSenoidal());
+                    break;
+                case 1:  //Senoidal
+                    panelConfiguracion.Children.Add(new ConfiguracionSeñalSenoidal());
+                    break;
+                default:
+                    break;
             }
+        }
     }
 }
