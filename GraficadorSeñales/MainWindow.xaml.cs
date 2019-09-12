@@ -96,8 +96,7 @@ namespace GraficadorSeñales
             //selectedIndex te dice cuál esta seleccionado
             switch(cbTipoSeñal.SelectedIndex)
             {
-                case 0: //Parabolica
-                    panelConfiguracion.Children.Add(new ConfiguracionSeñalSenoidal());
+                case 0: //Parabolica                    
                     break;
                 case 1:  //Senoidal
                     panelConfiguracion.Children.Add(new ConfiguracionSeñalSenoidal());

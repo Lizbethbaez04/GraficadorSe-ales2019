@@ -30,6 +30,7 @@
             <ComboBoxItem>Señal parabolica</ComboBoxItem>
             <ComboBoxItem>Señal senoidal</ComboBoxItem>
             <ComboBoxItem>Señal exponencial</ComboBoxItem>
+            <ComboBoxItem>Señal audio</ComboBoxItem>
         </ComboBox>
         <Grid HorizontalAlignment="Left" Height="100" VerticalAlignment="Top" Width="100"/>
 
