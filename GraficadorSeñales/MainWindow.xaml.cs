@@ -41,6 +41,7 @@ namespace GraficadorSeñales
             {
                 case 0: //Parabólica
                     señal = new SeñalParabolica();
+
                     break;
                 case 1: //Senoidal
                     double amplitud = double.Parse(((ConfiguracionSeñalSenoidal)(panelConfiguracion.Children[0])).txtAmplitud.Text);
@@ -48,19 +49,31 @@ namespace GraficadorSeñales
                     double frecuencia = double.Parse(((ConfiguracionSeñalSenoidal)(panelConfiguracion.Children[0])).txtFrecuencia.Text);
                     señal = new SeñalSenoidal(amplitud, fase, frecuencia);
                     break;
-                case 2:
+                case 2: //Exponencial
                     double alpha = double.Parse(((ConfigurcionExponencial)(panelConfiguracion.Children[0])).txtAlpha.Text);
                     señal = new SeñalExponencial(alpha);
+                    break;
+                case 3: //Audio
+                    string rutaArchivo = ((ConfiguracionAudio)(panelConfiguracion.Children[0])).txtRutaArchivo.Text;
+                    señal = new SeñalAudio(rutaArchivo);
+                    txtTiempoInicial.Text = señal.TiempoInicial.ToString();
+                    txtTiempoFinal.Text = señal.TiempoFinal.ToString();
+                    txtFrecuenciaMuestreo.Text = señal.FrecuenciaMuestreo.ToString();
                     break;
                 default:
                     señal = null;
                     break;
             }
-            señal.TiempoInicial = tiempoInicial;
-            señal.TiempoFinal = tiempoFinal;
-            señal.FrecuenciaMuestreo = frecuenciaMuestreo;
+            
+            if(cbTipoSeñal.SelectedIndex !=3 && señal != null)
+            {
+                señal.TiempoInicial = tiempoInicial;
+                señal.TiempoFinal = tiempoFinal;
+                señal.FrecuenciaMuestreo = frecuenciaMuestreo;
 
-            señal.construirSeñal();
+                señal.construirSeñal();
+            }
+            
 
             double amplitudMaxima = señal.AmplitudMaxima;
 
@@ -101,8 +114,11 @@ namespace GraficadorSeñales
                 case 1:  //Senoidal
                     panelConfiguracion.Children.Add(new ConfiguracionSeñalSenoidal());
                     break;
-                case 2:
+                case 2: //Exponencial
                     panelConfiguracion.Children.Add(new ConfigurcionExponencial());
+                    break;
+                case 3: //Audio
+                    panelConfiguracion.Children.Add(new ConfiguracionAudio());
                     break;
                 default:
                     break;

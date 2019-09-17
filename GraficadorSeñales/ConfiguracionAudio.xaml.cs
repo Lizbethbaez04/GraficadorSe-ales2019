@@ -13,6 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using Microsoft.Win32;
+
 namespace GraficadorSeñales
 {
     /// <summary>
@@ -23,6 +25,16 @@ namespace GraficadorSeñales
         public ConfiguracionAudio()
         {
             InitializeComponent();
+        }
+
+        private void BtnElegirArchivo_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog fileDialog = new OpenFileDialog();//openfiledialog maneja la operacion de archivos
+            if((bool)fileDialog.ShowDialog())
+            {
+                //Nombre del archivo que se seleccionó
+                txtRutaArchivo.Text = fileDialog.FileName;
+            }
         }
     }
 }
