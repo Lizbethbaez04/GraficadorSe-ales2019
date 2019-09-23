@@ -36,6 +36,7 @@ namespace GraficadorSeñales
             //SeñalParabolica señal = new SeñalParabolica();
             //FuncionSigno señal = new FuncionSigno();
             Señal señal; //polimorfismo: que clases actuen como otras clases
+            Señal señalResultante;
 
             switch(cbTipoSeñal.SelectedIndex)
             {
@@ -74,29 +75,55 @@ namespace GraficadorSeñales
                 señal.construirSeñal();
             }
             
-
+            switch(cbOperacion.SelectedIndex)
+            {
+                case 0:  //Escala de amplitud
+                    double factorEscala = double.Parse(((OperacionEscalaAmplitud)(panelConfiguracionOperacion.Children[0])).txtFactorEscala.Text);
+                    señalResultante = Señal.escalarAmplitud(señal, factorEscala);
+                    break;
+                default:
+                    señalResultante = null;
+                    break;
+            }
             double amplitudMaxima = señal.AmplitudMaxima;
+            double amplitudMaximaResultado = señalResultante.AmplitudMaxima;
 
             plnGrafica.Points.Clear();
+            plnGraficaResultante.Points.Clear();
 
             //Ayuda a recorrer todas las estructuras de datos que hay
             foreach (Muestra muestra in señal.Muestras)
             {
+                plnGraficaResultante.Points.Add(adaptarCoordenadas(muestra.X, muestra.Y, tiempoInicial, amplitudMaximaResultado));
+            }
+            foreach (Muestra muestra in señalResultante.Muestras)
+            {
                 plnGrafica.Points.Add(adaptarCoordenadas(muestra.X, muestra.Y, tiempoInicial, amplitudMaxima));
             }
 
+            lblLimiteSuperior.Text = amplitudMaxima.ToString("F");
+            lblLimiteInferior.Text = "-" + amplitudMaxima.ToString("F");
 
-            lblLimiteSuperior.Text = amplitudMaxima.ToString();
-            lblLimiteInferior.Text = "-" + amplitudMaxima.ToString();
-            //Entre más muestras haya, más calidad en la gráfica hay
+            lblLimiteInferiorResultante.Text = amplitudMaximaResultado.ToString("F");
+            lblLimiteSuperiorResultante.Text = "-" + amplitudMaximaResultado.ToString("F");
+
+            //Entre más muestras haya, más calidad en la gráfica hay <<Original>>
             plnEjeX.Points.Clear();
             plnEjeX.Points.Add(adaptarCoordenadas(tiempoInicial, 0.0, tiempoInicial, amplitudMaxima)); //Esto es para hacer la linea del eje de las X 
             plnEjeX.Points.Add(adaptarCoordenadas(tiempoFinal, 0.0, tiempoInicial, amplitudMaxima)); //Esto es para hacer la linea del eje de las X
+            //<<Resultante>>
+            plnEjeXResultante.Points.Clear();
+            plnEjeXResultante.Points.Add(adaptarCoordenadas(tiempoInicial, 0.0, tiempoInicial, amplitudMaximaResultado));
+            plnEjeXResultante.Points.Add(adaptarCoordenadas(tiempoFinal, 0.0, tiempoInicial, amplitudMaximaResultado));
 
-            //Eje Y
+            //Eje Y <<Original>>
             plnEjeY.Points.Clear();
             plnEjeY.Points.Add(adaptarCoordenadas(0.0, amplitudMaxima, tiempoInicial, amplitudMaxima));
             plnEjeY.Points.Add(adaptarCoordenadas(0.0, -amplitudMaxima, tiempoInicial, amplitudMaxima));
+            //<<Resultante>>
+            plnEjeYResultante.Points.Clear();
+            plnEjeYResultante.Points.Add(adaptarCoordenadas(0.0, amplitudMaximaResultado, tiempoInicial, amplitudMaximaResultado));
+            plnEjeYResultante.Points.Add(adaptarCoordenadas(0.0, -amplitudMaximaResultado, tiempoInicial, amplitudMaximaResultado));
         }
         public Point adaptarCoordenadas(double x, double y, double tiempoInicial, double amplitudMaxima)
         {
@@ -119,6 +146,19 @@ namespace GraficadorSeñales
                     break;
                 case 3: //Audio
                     panelConfiguracion.Children.Add(new ConfiguracionAudio());
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void CbOperacion_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            panelConfiguracionOperacion.Children.Clear();
+            switch(cbOperacion.SelectedIndex)
+            {
+                case 0:  //Escala de amplitud
+                    panelConfiguracionOperacion.Children.Add(new OperacionEscalaAmplitud());
                     break;
                 default:
                     break;
