@@ -38,15 +38,14 @@ namespace GraficadorSeñales
             Señal señal; //polimorfismo: que clases actuen como otras clases
             Señal señalResultante;
 
-            switch(cbTipoSeñal.SelectedIndex)
+            switch (cbTipoSeñal.SelectedIndex)
             {
                 case 0: //Parabólica
                     señal = new SeñalParabolica();
-
                     break;
                 case 1: //Senoidal
                     double amplitud = double.Parse(((ConfiguracionSeñalSenoidal)(panelConfiguracion.Children[0])).txtAmplitud.Text);
-                    double fase =  double.Parse(((ConfiguracionSeñalSenoidal)(panelConfiguracion.Children[0])).txtFase.Text);
+                    double fase = double.Parse(((ConfiguracionSeñalSenoidal)(panelConfiguracion.Children[0])).txtFase.Text);
                     double frecuencia = double.Parse(((ConfiguracionSeñalSenoidal)(panelConfiguracion.Children[0])).txtFrecuencia.Text);
                     señal = new SeñalSenoidal(amplitud, fase, frecuencia);
                     break;
@@ -65,8 +64,8 @@ namespace GraficadorSeñales
                     señal = null;
                     break;
             }
-            
-            if(cbTipoSeñal.SelectedIndex !=3 && señal != null)
+
+            if (cbTipoSeñal.SelectedIndex != 3 && señal != null)
             {
                 señal.TiempoInicial = tiempoInicial;
                 señal.TiempoFinal = tiempoFinal;
@@ -74,19 +73,25 @@ namespace GraficadorSeñales
 
                 señal.construirSeñal();
             }
-            
-            switch(cbOperacion.SelectedIndex)
+
+            switch (cbOperacion.SelectedIndex)
             {
                 case 0:  //Escala de amplitud
                     double factorEscala = double.Parse(((OperacionEscalaAmplitud)(panelConfiguracionOperacion.Children[0])).txtFactorEscala.Text);
                     señalResultante = Señal.escalarAmplitud(señal, factorEscala);
                     break;
+                case 1:  //Desplazamiento de amplitud
+                    double cantidadDesplazamiento = double.Parse(((DesplazamientoAmplitud)(panelConfiguracionOperacion.Children[0])).txtCantidadDesplazamiento.Text);
+                    señalResultante = Señal.desplazamientoAmplitud(señal, cantidadDesplazamiento);
+                    break;
                 default:
                     señalResultante = null;
                     break;
             }
-            double amplitudMaxima = señal.AmplitudMaxima;
-            double amplitudMaximaResultado = señalResultante.AmplitudMaxima;
+            //Operador ternario
+            //Si una es mayor que la otra o sino
+            double amplitudMaxima = (señal.AmplitudMaxima >= señalResultante.AmplitudMaxima) ? señal.AmplitudMaxima : señalResultante.AmplitudMaxima;
+            
 
             plnGrafica.Points.Clear();
             plnGraficaResultante.Points.Clear();
@@ -94,7 +99,7 @@ namespace GraficadorSeñales
             //Ayuda a recorrer todas las estructuras de datos que hay
             foreach (Muestra muestra in señal.Muestras)
             {
-                plnGraficaResultante.Points.Add(adaptarCoordenadas(muestra.X, muestra.Y, tiempoInicial, amplitudMaximaResultado));
+                plnGraficaResultante.Points.Add(adaptarCoordenadas(muestra.X, muestra.Y, tiempoInicial, amplitudMaxima));
             }
             foreach (Muestra muestra in señalResultante.Muestras)
             {
@@ -104,8 +109,8 @@ namespace GraficadorSeñales
             lblLimiteSuperior.Text = amplitudMaxima.ToString("F");
             lblLimiteInferior.Text = "-" + amplitudMaxima.ToString("F");
 
-            lblLimiteInferiorResultante.Text = amplitudMaximaResultado.ToString("F");
-            lblLimiteSuperiorResultante.Text = "-" + amplitudMaximaResultado.ToString("F");
+            lblLimiteInferiorResultante.Text = "-" + amplitudMaxima.ToString("F");
+            lblLimiteSuperiorResultante.Text = amplitudMaxima.ToString("F");
 
             //Entre más muestras haya, más calidad en la gráfica hay <<Original>>
             plnEjeX.Points.Clear();
@@ -113,8 +118,8 @@ namespace GraficadorSeñales
             plnEjeX.Points.Add(adaptarCoordenadas(tiempoFinal, 0.0, tiempoInicial, amplitudMaxima)); //Esto es para hacer la linea del eje de las X
             //<<Resultante>>
             plnEjeXResultante.Points.Clear();
-            plnEjeXResultante.Points.Add(adaptarCoordenadas(tiempoInicial, 0.0, tiempoInicial, amplitudMaximaResultado));
-            plnEjeXResultante.Points.Add(adaptarCoordenadas(tiempoFinal, 0.0, tiempoInicial, amplitudMaximaResultado));
+            plnEjeXResultante.Points.Add(adaptarCoordenadas(tiempoInicial, 0.0, tiempoInicial, amplitudMaxima));
+            plnEjeXResultante.Points.Add(adaptarCoordenadas(tiempoFinal, 0.0, tiempoInicial, amplitudMaxima));
 
             //Eje Y <<Original>>
             plnEjeY.Points.Clear();
@@ -122,8 +127,9 @@ namespace GraficadorSeñales
             plnEjeY.Points.Add(adaptarCoordenadas(0.0, -amplitudMaxima, tiempoInicial, amplitudMaxima));
             //<<Resultante>>
             plnEjeYResultante.Points.Clear();
-            plnEjeYResultante.Points.Add(adaptarCoordenadas(0.0, amplitudMaximaResultado, tiempoInicial, amplitudMaximaResultado));
-            plnEjeYResultante.Points.Add(adaptarCoordenadas(0.0, -amplitudMaximaResultado, tiempoInicial, amplitudMaximaResultado));
+            plnEjeYResultante.Points.Add(adaptarCoordenadas(0.0, amplitudMaxima, tiempoInicial, amplitudMaxima));
+            plnEjeYResultante.Points.Add(adaptarCoordenadas(0.0, -amplitudMaxima, tiempoInicial, amplitudMaxima));
+            
         }
         public Point adaptarCoordenadas(double x, double y, double tiempoInicial, double amplitudMaxima)
         {
@@ -159,6 +165,9 @@ namespace GraficadorSeñales
             {
                 case 0:  //Escala de amplitud
                     panelConfiguracionOperacion.Children.Add(new OperacionEscalaAmplitud());
+                    break;
+                case 1:  //Desplazamiento de amplitud
+                    panelConfiguracionOperacion.Children.Add(new DesplazamientoAmplitud());
                     break;
                 default:
                     break;

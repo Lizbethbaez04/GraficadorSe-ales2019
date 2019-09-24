@@ -68,6 +68,9 @@
     <Compile Include="ConfigurcionExponencial.xaml.cs">
       <DependentUpon>ConfigurcionExponencial.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DesplazamientoAmplitud.xaml.cs">
+      <DependentUpon>DesplazamientoAmplitud.xaml</DependentUpon>
+    </Compile>
     <Compile Include="FuncionSigno.cs" />
     <Compile Include="Muestra.cs" />
     <Compile Include="OperacionEscalaAmplitud.xaml.cs">
@@ -88,6 +91,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ConfigurcionExponencial.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DesplazamientoAmplitud.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

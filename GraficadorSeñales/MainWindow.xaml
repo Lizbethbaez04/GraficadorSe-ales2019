@@ -47,6 +47,7 @@
         <Grid x:Name="panelConfiguracionOperacion" HorizontalAlignment="Left" Height="159" Margin="573,40,0,0" VerticalAlignment="Top" Width="233"/>
         <ComboBox x:Name="cbOperacion" HorizontalAlignment="Left" Margin="289,41,0,0" VerticalAlignment="Top" Width="224" BorderBrush="#FFF9F9F9" SelectedIndex="0" SelectionChanged="CbOperacion_SelectionChanged" >
             <ComboBoxItem>Escala de amplitud</ComboBoxItem>
+            <ComboBoxItem>Desplazamiento de amplitud</ComboBoxItem>
         </ComboBox>
 
     </Grid>
