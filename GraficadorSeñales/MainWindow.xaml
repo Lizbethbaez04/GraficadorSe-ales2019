@@ -49,6 +49,7 @@
             <ComboBoxItem>Escala de amplitud</ComboBoxItem>
             <ComboBoxItem>Desplazamiento de amplitud</ComboBoxItem>
             <ComboBoxItem>Multiplicación de señales</ComboBoxItem>
+            <ComboBoxItem>Escala exponencial</ComboBoxItem>
         </ComboBox>
         <TextBlock x:Name="lblTipoSeñal_2" HorizontalAlignment="Left" Margin="618,11,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="21" Width="120" FontSize="16" Text="Tipo de señal:"/>
         <Grid x:Name="panelConfiguracion_2" HorizontalAlignment="Left" Height="212" Margin="610,76,0,0" VerticalAlignment="Top" Width="290"/>
