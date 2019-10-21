@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Numerics;
 
 namespace GraficadorSeñales
 {
@@ -131,6 +132,9 @@ namespace GraficadorSeñales
                 case 3: //Escala resultante
                     double exponente = double.Parse(((OperacionEscalaExponencial)(panelConfiguracionOperacion.Children[0])).txtExponente.Text);
                     señalResultante = Señal.escalaExponencial(señal, exponente);
+                    break;
+                case 4:  //Transformada de Fourier
+                    señalResultante = Señal.transformadaFourier(señal);
                     break;
                 default:
                     señalResultante = null;
