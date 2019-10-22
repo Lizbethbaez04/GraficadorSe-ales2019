@@ -143,7 +143,7 @@ namespace GraficadorSeñales
             //Operador ternario
             //Si una es mayor que la otra o sino-> elige entre la primera y la resultante
             double amplitudMaxima = (señal.AmplitudMaxima >= señalResultante.AmplitudMaxima) ? señal.AmplitudMaxima : señalResultante.AmplitudMaxima;
-        
+            
             if(segundaSeñal !=null)
             {
                 //Elige entre la mas grande de la primera y la resultante y la segunda
@@ -171,6 +171,24 @@ namespace GraficadorSeñales
             {
                 plnGrafica.Points.Add(adaptarCoordenadas(muestra.X, muestra.Y, tiempoInicial, amplitudMaxima));
             }
+
+            //Se recorre todo el arreglo de la tranormada de fourier para encontrar el indice
+            if(cbOperacion.SelectedIndex == 4)
+            {
+                int indiceMaximo = 0;
+                for(int i=0; i<señalResultante.Muestras.Count/2; i++)
+                {
+                    if(señalResultante.Muestras[i].Y > señalResultante.Muestras[indiceMaximo].Y)
+                    {
+                        indiceMaximo = i;
+                    }
+                    double frecuencia = (double)(indiceMaximo * señalResultante.FrecuenciaMuestreo) / (double)señalResultante.Muestras.Count;
+                    //Pasar numero a "texto"
+                    lblHertz.Text = frecuencia.ToString("N") + "Hz";
+                }
+            }
+
+
 
             lblLimiteSuperior.Text = amplitudMaxima.ToString("F");
             lblLimiteInferior.Text = "-" + amplitudMaxima.ToString("F");

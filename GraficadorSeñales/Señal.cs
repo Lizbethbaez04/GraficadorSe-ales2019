@@ -76,6 +76,7 @@ namespace GraficadorSeñales
                     resultado.AmplitudMaxima = Math.Abs(nuevoValor);
                 }
             }
+            
             return resultado;
         }
 
